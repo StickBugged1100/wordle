@@ -1,0 +1,1 @@
+wordle, fast på svenska och i din terminal för jag orkar inte med netbeans.
