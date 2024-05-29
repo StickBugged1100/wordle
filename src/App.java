@@ -49,6 +49,7 @@ public class App {
         Boolean rätt = false;
         int length = 0;
         int gissningar = 0;
+        int j = 0;
 
         // Antal ord i filen. Behövs om ord tas bort eller läggs till så småning om.
         while (scanner.hasNext()) {
@@ -100,22 +101,23 @@ public class App {
                 in.close();
                 rätt = true;
             } else { // Om gissningen ej är ordet.
-                int j = 0;
+                // int j = 0;
                 for (i = 0; i < ordArray.length; i++) {
-                    if (gissning.charAt(i) == ordArray[i] && j < 5) { // Går igenom bokstäverna i gissningen och kollar om de är på samma plats som i ordet.
+                    if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de är på samma plats som i ordet.
                         gissningArray[i] = 'I';
                         j++;
-                    } else {
-                        for (i = 0; i < ord.length(); i++) {
-                            char guessChar = ord.charAt(i);
-                            if (gissning.contains(String.valueOf(guessChar))) {
-                                for (j = 0; j < ord.length(); j++) {
-                                    if (gissning.charAt(j) == guessChar) {
-                                        gissningArray[j] = '-';
-                                    }
-                                }
+                        // System.out.println(Arrays.toString(gissningArray));
+                    }
+                }
+                for (i = 0; i < ord.length(); i++) {
+                    char guessChar = ord.charAt(i);
+                    if (gissning.contains(String.valueOf(guessChar)) && gissningArray[j] != 'I') {
+                        for (j = 0; j < ord.length(); j++) {
+                            if (gissning.charAt(j) == guessChar) {
+                                gissningArray[j] = '-';
                             }
                         }
+                        j = 0;
                     }
                 }
                 gissningar++;
