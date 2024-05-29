@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.Random;
-import java.nio.charset.StandardCharsets;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -49,6 +48,7 @@ public class App {
         Random random = new Random();
         Boolean rätt = false;
         int length = 0;
+        int gissningar = 0;
 
         // Antal ord i filen. Behövs om ord tas bort eller läggs till så småning om.
         while (scanner.hasNext()) {
@@ -94,22 +94,23 @@ public class App {
                 break;
             }
 
-            // Om gissningen är ordet avslutas spelet.
+            // Om gissningen är ordet vinner man spelet.
             if (gissning.equals(ord)) {
                 gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
                 in.close();
                 rätt = true;
-            } else {
+            } else { // Om gissningen ej är ordet.
                 int j = 0;
                 for (i = 0; i < ordArray.length; i++) {
-                    if (gissning.charAt(i) == ordArray[i] && j < 5) {
+                    if (gissning.charAt(i) == ordArray[i] && j < 5) { // Går igenom bokstäverna i gissningen och kollar om de är på samma plats som i ordet.
                         gissningArray[i] = 'I';
                         j++;
-                    } else if (Arrays.asList(ordArray).contains(gissning.charAt(i)) && j < 5) {
+                    } else if (Arrays.asList(ordArray).contains(gissning.charAt(i)) && j < 5) { // Gär igenom bokstäverna i gissningen och kollar om de finns i ordet.
                         gissningArray[i] = '-';
                         j++;
                     }
                 }
+                gissningar++;
                 System.out.println(Arrays.toString(gissningArray));
             }
         }
