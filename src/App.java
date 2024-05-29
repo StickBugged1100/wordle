@@ -43,7 +43,7 @@ public class App {
          */
         
         // Läser in filen wordleord och skapar ett antal nya variabler och scanners.
-        File ordLista = new File("src/wordleord.txt");
+        File ordLista = new File("wordleord.txt");
         Scanner scanner = new Scanner(ordLista, "Cp850");
         Random random = new Random();
         Boolean rätt = false;
@@ -105,8 +105,17 @@ public class App {
                     if (gissning.charAt(i) == ordArray[i] && j < 5) { // Går igenom bokstäverna i gissningen och kollar om de är på samma plats som i ordet.
                         gissningArray[i] = 'I';
                         j++;
-                    } else if (Arrays.asList(ordArray).contains(gissning.charAt(i)) && j < 5) { // Gär igenom bokstäverna i gissningen och kollar om de finns i ordet.
-                        gissningArray[i] = '-';
+                    } else {
+                        for (i = 0; i < ord.length(); i++) {
+                            char guessChar = ord.charAt(i);
+                            if (gissning.contains(String.valueOf(guessChar))) {
+                                for (j = 0; j < ord.length(); j++) {
+                                    if (gissning.charAt(j) == guessChar) {
+                                        gissningArray[j] = '-';
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 gissningar++;
