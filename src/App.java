@@ -111,7 +111,7 @@ public class App {
                 }
                 for (i = 0; i < ord.length(); i++) {
                     char guessChar = ord.charAt(i);
-                    if (gissning.contains(String.valueOf(guessChar)) && gissningArray[j] != 'I') {
+                    if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
                         for (j = 0; j < ord.length(); j++) {
                             if (gissning.charAt(j) == guessChar) {
                                 gissningArray[j] = '-';
