@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -41,7 +42,7 @@ public class App {
          * }
          * scanner.close();
          */
-        
+
         // Läser in filen wordleord och skapar ett antal nya variabler och scanners.
         File ordLista = new File("wordleord.txt");
         Scanner scanner = new Scanner(ordLista, "Cp850");
@@ -67,7 +68,8 @@ public class App {
         String ord = ("");
         char[] ordArray = new char[5];
         char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-        scanner = new Scanner(ordLista, "Cp850");
+        ArrayList<String> tidigareGissningar = new ArrayList<>();
+        scanner = new Scanner(ordLista);
 
         // Läser in ett slumpmässigt ord ur ordlistan.
         int i;
@@ -80,13 +82,16 @@ public class App {
 
         // Själva spelet.
         while (!rätt) {
-
             gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-            String[] tidigareGissningar = new String[5];
+            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
 
             // Skapar en variabel och en scanner.
             String gissning = "";
-            Scanner in = new Scanner(new InputStreamReader(System.in, "Cp850"));
+            Scanner in = new Scanner(new InputStreamReader(System.in));
 
             // Läser in gissningen.
             if (in.hasNextLine()) {
@@ -97,17 +102,19 @@ public class App {
             }
 
             // Om gissningen är ordet vinner man spelet.
-            if (gissning.equals(ord)) {
+            if (gissning.equals(ord) && gissningar < 5) {
                 gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
                 in.close();
                 rätt = true;
-            } else { // Om gissningen ej är ordet.
-                // int j = 0;
+                tidigareGissningar.set(gissningar, "" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+                gissningar++;
+                
+            } else if (gissningar < 5) { // Om gissningen ej är ordet.
                 for (i = 0; i < ordArray.length; i++) {
-                    if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de är på samma plats som i ordet.
+                    if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de är
+                                                             // på samma plats som i ordet.
                         gissningArray[i] = 'I';
                         j++;
-                        // System.out.println(Arrays.toString(gissningArray));
                     }
                 }
                 for (i = 0; i < ord.length(); i++) {
@@ -119,10 +126,19 @@ public class App {
                             }
                         }
                         j = 0;
+
                     }
                 }
+
+                tidigareGissningar.set(gissningar, "" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+                for (i = 0; i < tidigareGissningar.size(); i++) {
+                    System.out.println(tidigareGissningar.get(i));
+                }
+                System.out.println("");
                 gissningar++;
-                tidigareGissningar[gissningar] = gissningArray.toString();
+                
+            } else if (gissningar >= 5) {
+                rätt = false;
             }
         }
         System.out.println(Arrays.toString(gissningArray));
