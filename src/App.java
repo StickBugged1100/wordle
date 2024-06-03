@@ -82,6 +82,7 @@ public class App {
         while (!rätt) {
 
             gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
+            String[] tidigareGissningar = new String[5];
 
             // Skapar en variabel och en scanner.
             String gissning = "";
@@ -121,7 +122,7 @@ public class App {
                     }
                 }
                 gissningar++;
-                System.out.println(Arrays.toString(gissningArray));
+                tidigareGissningar[gissningar] = gissningArray.toString();
             }
         }
         System.out.println(Arrays.toString(gissningArray));
