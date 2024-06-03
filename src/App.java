@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -68,8 +67,7 @@ public class App {
         String ord = ("");
         char[] ordArray = new char[5];
         char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-        ArrayList<String> tidigareGissningar = new ArrayList<>();
-        scanner = new Scanner(ordLista);
+        scanner = new Scanner(ordLista, "Cp850");
 
         // Läser in ett slumpmässigt ord ur ordlistan.
         int i;
@@ -78,20 +76,15 @@ public class App {
             ordArray = ord.toCharArray();
         }
 
-        System.out.println(ord);
-
         // Själva spelet.
         while (!rätt) {
+
             gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
-            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
-            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
-            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
-            tidigareGissningar.add("" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
+            System.out.println(Arrays.toString(gissningArray));
 
             // Skapar en variabel och en scanner.
             String gissning = "";
-            Scanner in = new Scanner(new InputStreamReader(System.in));
+            Scanner in = new Scanner(new InputStreamReader(System.in, "Cp850"));
 
             // Läser in gissningen.
             if (in.hasNextLine()) {
@@ -106,9 +99,7 @@ public class App {
                 gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
                 in.close();
                 rätt = true;
-                tidigareGissningar.set(gissningar, "" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
                 gissningar++;
-                
             } else if (gissningar < 5) { // Om gissningen ej är ordet.
                 for (i = 0; i < ordArray.length; i++) {
                     if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de är
@@ -126,22 +117,22 @@ public class App {
                             }
                         }
                         j = 0;
-
+                        System.out.println(Arrays.toString(gissningArray));
                     }
                 }
-
-                tidigareGissningar.set(gissningar, "" + gissningArray[0] + gissningArray[1] + gissningArray[2] + gissningArray[3] + gissningArray[4]);
-                for (i = 0; i < tidigareGissningar.size(); i++) {
-                    System.out.println(tidigareGissningar.get(i));
-                }
-                System.out.println("");
                 gissningar++;
-                
             } else if (gissningar >= 5) {
                 rätt = false;
             }
         }
-        System.out.println(Arrays.toString(gissningArray));
+
         scanner.close();
+        if (rätt) {
+            System.out.println("Grattis! Du vann!");
+            System.out.println("Försök: " + gissningar);
+        } else {
+            System.out.println("Du gissade fel.)");
+            System.out.println("Orden var: " + ord);
+        }
     }
 }
