@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,121 +45,125 @@ public class App {
          */
 
         // Läser in filen wordleord och skapar ett antal nya variabler och scanners.
-        Scanner scanner;
-        File ordLista = new File("wordleord.txt");
-        try {
-            scanner = new Scanner(ordLista);
-        } catch (FileNotFoundException e) {
-            System.out.println("Kunde inte hitta ordlistan.");
-            return;
-        }
-        Random random = new Random();
-        Boolean rätt = false;
-        int length = 0;
-        int gissningar = 0;
-        int j = 0;
+        System.out.println("Välkommen till Wordle!");
+        while (true) {
+            Scanner scanner;
+            File ordLista = new File("wordleord.txt");
+            try {
+                scanner = new Scanner(ordLista);
+            } catch (FileNotFoundException e) {
+                System.out.println("Kunde inte hitta ordlistan.");
+                return;
+            }
+            Random random = new Random();
+            Boolean rätt = false;
+            int length = 0;
+            int gissningar = 0;
+            int j = 0;
 
-        // Antal ord i filen. Behövs om ord tas bort eller läggs till så småning om.
-        while (scanner.hasNext()) {
-            length++;
-            scanner.nextLine();
-        }
-
-        // Stänger scannern.
-        scanner.close();
-
-        // Skapar random variabeln.
-        int rand = random.nextInt(length + 1);
-
-        // Skapar några fler variabler och en scanner.
-        String ord = ("");
-        char[] ordArray = new char[5];
-        char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-        try {
-            scanner = new Scanner(ordLista);
-        } catch (FileNotFoundException e) {
-            System.out.println("Kunde inte hitta ordlistan.");
-        }
-        // Läser in ett slumpmässigt ord ur ordlistan.
-        int i;
-        for (i = 0; i < rand; i++) {
-            ord = scanner.nextLine();
-            ordArray = ord.toCharArray();
-        }
-
-        System.out.println(ord);
-
-        System.out.println(
-                "Välkommen till Wordle!\nGissa ett ord med 5 bokstäver.\nDu har 5 försök.\nEn lista med möjliga ord bör ha följt med programmet.\n");
-
-        // Själva spelet.
-        while (!rätt) {
-            gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-
-            // Skapar en variabel och en scanner.
-            String gissning = "";
-            Scanner in = new Scanner(new InputStreamReader(System.in, "Cp850"));
-
-            // Läser in gissningen.
-            if (in.hasNextLine()) {
-                gissning = in.nextLine();
+            // Antal ord i filen. Behövs om ord tas bort eller läggs till så småning om.
+            while (scanner.hasNext()) {
+                length++;
+                scanner.nextLine();
             }
 
-            List<String> wordList = new ArrayList<>();
-            try (Scanner skannare = new Scanner(new File("wordleord.txt"))) {
-                while (skannare.hasNextLine()) {
-                    wordList.add(skannare.nextLine());
+            // Stänger scannern.
+            scanner.close();
+
+            // Skapar random variabeln.
+            int rand = random.nextInt(length + 1);
+
+            // Skapar några fler variabler och en scanner.
+            String ord = ("");
+            char[] ordArray = new char[5];
+            char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
+            try {
+                scanner = new Scanner(ordLista);
+            } catch (FileNotFoundException e) {
+                System.out.println("Kunde inte hitta ordlistan.");
+            }
+            // Läser in ett slumpmässigt ord ur ordlistan.
+            int i;
+            for (i = 0; i < rand; i++) {
+                ord = scanner.nextLine();
+                ordArray = ord.toCharArray();
+            }
+
+            System.out.println(
+                    "Gissa ett ord med 5 bokstäver.\nDu har 5 försök.\nEn lista med möjliga ord bör ha följt med programmet.\nTryck på CTRL+C för att avsluta.\n");
+
+            // Själva spelet.
+            while (!rätt) {
+                gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
+
+                // Skapar en variabel och en scanner.
+                String gissning = "";
+                Scanner in = new Scanner(new InputStreamReader(System.in, "Cp850"));
+
+                // Läser in gissningen.
+                if (in.hasNextLine()) {
+                    gissning = in.nextLine();
                 }
-            }
 
-            // Convert the gissning variable to lowercase
-
-            // Check if the lowercase gissning exists in the wordList
-            if (gissning.length() != 5) {
-                System.out.println("Ordet måste vara 5 bokstäver. Försök igen.");
-            } else if (!wordList.contains(gissning)) {
-                System.out.println("Ordet finns inte i ordlistan. Försök igen.");
-            } else {
-                // Om gissningen är ordet vinner man spelet.
-                if (gissning.equals(ord) && gissningar < 5) {
-                    gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
-                    in.close();
-                    rätt = true;
-                    gissningar++;
-                } else if (gissningar < 5) { // Om gissningen ej är ordet.
-                    for (i = 0; i < ordArray.length; i++) {
-                        if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de
-                                                                 // är på samma plats som i ordet.
-                            gissningArray[i] = 'I';
-                            j++;
-                        }
+                List<String> wordList = new ArrayList<>();
+                try (Scanner skannare = new Scanner(new File("wordleord.txt"))) {
+                    while (skannare.hasNextLine()) {
+                        wordList.add(skannare.nextLine());
                     }
+                }
 
-                    for (i = 0; i < ord.length(); i++) {
-                        char guessChar = ord.charAt(i);
-                        if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
-                            for (j = 0; j < ord.length(); j++) {
-                                if (gissning.charAt(j) == guessChar) {
-                                    gissningArray[j] = '-';
-                                }
+                // Convert the gissning variable to lowercase
+
+                // Check if the lowercase gissning exists in the wordList
+                if (gissning.length() != 5) {
+                    System.out.println("Ordet måste vara 5 bokstäver. Försök igen.");
+                } else if (!wordList.contains(gissning)) {
+                    System.out.println("Ordet finns inte i ordlistan. Försök igen.");
+                } else {
+                    // Om gissningen är ordet vinner man spelet.
+                    if (gissning.equals(ord) && gissningar < 5) {
+                        gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
+                        in.close();
+                        rätt = true;
+                        gissningar++;
+                    } else if (gissningar < 5) { // Om gissningen ej är ordet.
+                        for (i = 0; i < ordArray.length; i++) {
+                            if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar
+                                                                     // om de
+                                                                     // är på samma plats som i ordet.
+                                gissningArray[i] = 'I';
+                                j++;
                             }
-                            j = 0;
                         }
+
+                        for (i = 0; i < ord.length(); i++) {
+                            char guessChar = ord.charAt(i);
+                            if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
+                                for (j = 0; j < ord.length(); j++) {
+                                    if (gissning.charAt(j) == guessChar) {
+                                        gissningArray[j] = '-';
+                                    }
+                                }
+                                j = 0;
+                            }
+                        }
+                        System.out.println(Arrays.toString(gissningArray));
                     }
-                    System.out.println(Arrays.toString(gissningArray));
-                }
-                gissningar++;
+                    gissningar++;
 
-                scanner.close();
+                    scanner.close();
 
-                if (rätt) {
-                    System.out.println("Grattis! Du vann!");
-                    System.out.println("Försök: " + (gissningar - 1));
-                    break;
-                } else if (gissningar > 4) {
-                    System.out.println("Slut försök.");
-                    System.out.println("Orden var: " + ord);
-                    break;
+                    if (rätt) {
+                        System.out.println("Grattis! Du vann!");
+                        System.out.println("Försök: " + (gissningar - 1));
+                        TimeUnit.SECONDS.sleep(5);
+                        break;
+                    } else if (gissningar > 4) {
+                        System.out.println("Slut försök.");
+                        System.out.println("Orden var: " + ord + "\n");
+                        TimeUnit.SECONDS.sleep(5);
+                        break;
+                    }
                 }
             }
         }
