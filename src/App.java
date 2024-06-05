@@ -2,7 +2,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class App {
@@ -44,7 +46,7 @@ public class App {
 
         // Läser in filen wordleord och skapar ett antal nya variabler och scanners.
         File ordLista = new File("wordleord.txt");
-        Scanner scanner = new Scanner(ordLista, "Cp850");
+        Scanner scanner = new Scanner(ordLista);
         Random random = new Random();
         Boolean rätt = false;
         int length = 0;
@@ -67,7 +69,7 @@ public class App {
         String ord = ("");
         char[] ordArray = new char[5];
         char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-        scanner = new Scanner(ordLista, "Cp850");
+        scanner = new Scanner(ordLista);
 
         // Läser in ett slumpmässigt ord ur ordlistan.
         int i;
@@ -76,11 +78,11 @@ public class App {
             ordArray = ord.toCharArray();
         }
 
-        // Själva spelet.
-        while (!rätt) {
+        System.out.println(ord);
 
+        // Själva spelet.
+        while (gissningar <= 5) {
             gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-            System.out.println(Arrays.toString(gissningArray));
 
             // Skapar en variabel och en scanner.
             String gissning = "";
@@ -89,50 +91,68 @@ public class App {
             // Läser in gissningen.
             if (in.hasNextLine()) {
                 gissning = in.nextLine();
+            }
+
+            List<String> wordList = new ArrayList<>();
+            try (Scanner skannare = new Scanner(new File("wordleord.txt"))) {
+                while (skannare.hasNextLine()) {
+                    wordList.add(skannare.nextLine());
+                }
+            }
+
+            // Convert the gissning variable to lowercase
+
+            // Check if the lowercase gissning exists in the wordList
+            if (gissning.length() != 5) {
+                System.out.println("Ordet måste vara 5 bokstäver. Försök igen.");
+            } else if (!wordList.contains(gissning)) {
+                System.out.println("Ordet finns inte i ordlistan. Försök igen.");
             } else {
-                System.out.println("error");
-                break;
-            }
-
-            // Om gissningen är ordet vinner man spelet.
-            if (gissning.equals(ord) && gissningar < 5) {
-                gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
-                in.close();
-                rätt = true;
-                gissningar++;
-            } else if (gissningar < 5) { // Om gissningen ej är ordet.
-                for (i = 0; i < ordArray.length; i++) {
-                    if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de är
-                                                             // på samma plats som i ordet.
-                        gissningArray[i] = 'I';
-                        j++;
-                    }
-                }
-                for (i = 0; i < ord.length(); i++) {
-                    char guessChar = ord.charAt(i);
-                    if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
-                        for (j = 0; j < ord.length(); j++) {
-                            if (gissning.charAt(j) == guessChar) {
-                                gissningArray[j] = '-';
-                            }
+                // Om gissningen är ordet vinner man spelet.
+                if (gissning.equals(ord) && gissningar < 5) {
+                    gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
+                    in.close();
+                    rätt = true;
+                    gissningar++;
+                } else if (gissningar < 5) { // Om gissningen ej är ordet.
+                    for (i = 0; i < ordArray.length; i++) {
+                        if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de
+                                                                 // är
+                                                                 // på samma plats som i ordet.
+                            gissningArray[i] = 'I';
+                            j++;
                         }
-                        j = 0;
-                        System.out.println(Arrays.toString(gissningArray));
                     }
-                }
-                gissningar++;
-            } else if (gissningar >= 5) {
-                rätt = false;
-            }
-        }
 
-        scanner.close();
-        if (rätt) {
-            System.out.println("Grattis! Du vann!");
-            System.out.println("Försök: " + gissningar);
-        } else {
-            System.out.println("Du gissade fel.)");
-            System.out.println("Orden var: " + ord);
+                    for (i = 0; i < ord.length(); i++) {
+                        char guessChar = ord.charAt(i);
+                        if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
+                            for (j = 0; j < ord.length(); j++) {
+                                if (gissning.charAt(j) == guessChar) {
+                                    gissningArray[j] = '-';
+                                }
+                            }
+                            j = 0;
+                        }
+                    }
+                    gissningar++;
+                    System.out.println(Arrays.toString(gissningArray));
+                }
+
+                scanner.close();
+
+                if (rätt) {
+                    System.out.println("Grattis! Du vann!");
+                    System.out.println("Försök: " + gissningar);
+                    break;
+                } else if (gissningar <= 5) {
+
+                } else {
+                    System.out.println("Slut försök.");
+                    System.out.println("Orden var: " + ord);
+                    break;
+                }
+            }
         }
     }
 }
