@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -22,20 +23,18 @@ public class App {
          * } else {
          * System.out.println("File already exists.");
          * }
-         * 
          * FileWriter fw = new FileWriter(wordleOrd, true);
-         * 
          * File words = new
          * File("C:\\Users\\simon.palmgrenjohan\\Documents\\svenskaord.txt");
          * Scanner scanner = new Scanner(words);
-         * while(scanner.hasNext()){
+         * while (scanner.hasNext()) {
          * String word = scanner.nextLine();
          * int i = word.indexOf("/");
-         * if(i != -1){
+         * if (i != -1) {
          * word = word.substring(0, i);
          * }
-         * if(word.length() == 5){
-         * if(word.equals(word.toLowerCase())){
+         * if (word.length() == 5) {
+         * if (word.equals(word.toLowerCase())) {
          * System.out.println(word);
          * fw.write(word + "\n");
          * }
@@ -45,8 +44,14 @@ public class App {
          */
 
         // Läser in filen wordleord och skapar ett antal nya variabler och scanners.
+        Scanner scanner;
         File ordLista = new File("wordleord.txt");
-        Scanner scanner = new Scanner(ordLista);
+        try {
+            scanner = new Scanner(ordLista);
+        } catch (FileNotFoundException e) {
+            System.out.println("Kunde inte hitta ordlistan.");
+            return;
+        }
         Random random = new Random();
         Boolean rätt = false;
         int length = 0;
@@ -69,8 +74,11 @@ public class App {
         String ord = ("");
         char[] ordArray = new char[5];
         char[] gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
-        scanner = new Scanner(ordLista);
-
+        try {
+            scanner = new Scanner(ordLista);
+        } catch (FileNotFoundException e) {
+            System.out.println("Kunde inte hitta ordlistan.");
+        }
         // Läser in ett slumpmässigt ord ur ordlistan.
         int i;
         for (i = 0; i < rand; i++) {
@@ -80,8 +88,11 @@ public class App {
 
         System.out.println(ord);
 
+        System.out.println(
+                "Välkommen till Wordle!\nGissa ett ord med 5 bokstäver.\nDu har 5 försök.\nEn lista med möjliga ord bör ha följt med programmet.\n");
+
         // Själva spelet.
-        while (gissningar <= 5) {
+        while (!rätt) {
             gissningArray = new char[] { 'o', 'o', 'o', 'o', 'o' };
 
             // Skapar en variabel och en scanner.
@@ -117,8 +128,7 @@ public class App {
                 } else if (gissningar < 5) { // Om gissningen ej är ordet.
                     for (i = 0; i < ordArray.length; i++) {
                         if (gissning.charAt(i) == ordArray[i]) { // Går igenom bokstäverna i gissningen och kollar om de
-                                                                 // är
-                                                                 // på samma plats som i ordet.
+                                                                 // är på samma plats som i ordet.
                             gissningArray[i] = 'I';
                             j++;
                         }
@@ -135,19 +145,17 @@ public class App {
                             j = 0;
                         }
                     }
-                    gissningar++;
                     System.out.println(Arrays.toString(gissningArray));
                 }
+                gissningar++;
 
                 scanner.close();
 
                 if (rätt) {
                     System.out.println("Grattis! Du vann!");
-                    System.out.println("Försök: " + gissningar);
+                    System.out.println("Försök: " + (gissningar - 1));
                     break;
-                } else if (gissningar <= 5) {
-
-                } else {
+                } else if (gissningar > 4) {
                     System.out.println("Slut försök.");
                     System.out.println("Orden var: " + ord);
                     break;
