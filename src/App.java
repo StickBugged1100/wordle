@@ -102,9 +102,11 @@ public class App {
 
                 // Läser in gissningen.
                 if (in.hasNextLine()) {
-                    gissning = in.nextLine();
+                    gissning = in.nextLine().toLowerCase();
                 }
-
+                in.close();
+                
+                // Skapar en lista med alla ord.
                 List<String> wordList = new ArrayList<>();
                 try (Scanner skannare = new Scanner(new File("wordleord.txt"))) {
                     while (skannare.hasNextLine()) {
@@ -112,18 +114,15 @@ public class App {
                     }
                 }
 
-                // Convert the gissning variable to lowercase
-
-                // Check if the lowercase gissning exists in the wordList
+                // Kollar om gissningen finns i ordlistan.
                 if (gissning.length() != 5) {
                     System.out.println("Ordet måste vara 5 bokstäver. Försök igen.");
                 } else if (!wordList.contains(gissning)) {
                     System.out.println("Ordet finns inte i ordlistan. Försök igen.");
-                } else {
+                } else { // Om gissningen finns i ordlistan.
                     // Om gissningen är ordet vinner man spelet.
                     if (gissning.equals(ord) && gissningar < 5) {
                         gissningArray = new char[] { 'I', 'I', 'I', 'I', 'I' };
-                        in.close();
                         rätt = true;
                         gissningar++;
                     } else if (gissningar < 5) { // Om gissningen ej är ordet.
@@ -135,8 +134,7 @@ public class App {
                                 j++;
                             }
                         }
-
-                        for (i = 0; i < ord.length(); i++) {
+                        for (i = 0; i < ord.length(); i++) { // Kollar om bokstäver från gissningen finns i ordet.
                             char guessChar = ord.charAt(i);
                             if (gissning.contains(String.valueOf(guessChar)) && gissningArray[i] != 'I') {
                                 for (j = 0; j < ord.length(); j++) {
@@ -147,12 +145,13 @@ public class App {
                                 j = 0;
                             }
                         }
-                        System.out.println(Arrays.toString(gissningArray));
+                        System.out.println(Arrays.toString(gissningArray)); // Visar användaren vilka bokstäver som passar in i ordet.
                     }
                     gissningar++;
 
                     scanner.close();
 
+                    // Förklarar sig sjölvt.
                     if (rätt) {
                         System.out.println("Grattis! Du vann!");
                         System.out.println("Försök: " + (gissningar - 1));
